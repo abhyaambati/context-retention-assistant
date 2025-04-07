@@ -16,8 +16,6 @@ A Python-based system for improving context retention and coherence in long-form
   - Temporal coherence degradation tracking
 
 
-## Installation
-
 ## Project Structure
 
 ```
