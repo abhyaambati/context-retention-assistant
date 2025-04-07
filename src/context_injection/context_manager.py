@@ -11,16 +11,7 @@ import logging
 
 class ContextManager:
     def __init__(self, model_name: str = "gpt2", max_length: int = 1024):
-        """
-        Initialize context manager.
         
-        Args:
-            model_name: Name of the model to use for tokenization
-            max_length: Maximum allowed token length
-            
-        Raises:
-            RuntimeError: If tokenizer loading fails
-        """
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_name)
             self.max_length = max_length
@@ -29,15 +20,7 @@ class ContextManager:
             raise RuntimeError(f"Failed to initialize ContextManager with tokenizer {model_name}")
         
     def _validate_token_length(self, text: str) -> Tuple[bool, int]:
-        """
-        Validate if text is within token limit.
-        
-        Args:
-            text: Text to validate
-            
-        Returns:
-            Tuple of (is_valid, token_count)
-        """
+       
         tokens = self.tokenizer.encode(text)
         return len(tokens) <= self.max_length, len(tokens)
         
@@ -45,20 +28,7 @@ class ContextManager:
                       current_prompt: str,
                       conversation_history: List[Dict[str, str]],
                       max_context_length: int = 512) -> str:
-        """
-        Inject relevant context into current prompt.
-        
-        Args:
-            current_prompt: The current conversation prompt
-            conversation_history: List of previous conversation turns
-            max_context_length: Maximum number of tokens for injected context
-            
-        Returns:
-            Enhanced prompt with injected context
-            
-        Raises:
-            ValueError: If prompt exceeds maximum token length
-        """
+       
         # Validate prompt length
         is_valid, token_count = self._validate_token_length(current_prompt)
         if not is_valid:
@@ -89,17 +59,7 @@ class ContextManager:
                                current_prompt: str,
                                conversation_history: List[Dict[str, str]],
                                top_k: int = 3) -> List[str]:
-        """
-        Select most relevant context from conversation history.
         
-        Args:
-            current_prompt: Current prompt to match against
-            conversation_history: Previous conversation turns
-            top_k: Number of most relevant turns to select
-            
-        Returns:
-            List of selected context strings
-        """
         if not conversation_history:
             return []
             
@@ -117,16 +77,7 @@ class ContextManager:
     def _compress_context(self,
                          context_list: List[str],
                          max_tokens: int) -> List[str]:
-        """
-        Compress context to fit within token limit.
         
-        Args:
-            context_list: List of context strings
-            max_tokens: Maximum number of tokens allowed
-            
-        Returns:
-            Compressed list of context strings
-        """
         compressed = []
         current_tokens = 0
         
@@ -148,16 +99,7 @@ class ContextManager:
     def _format_prompt_with_context(self,
                                   prompt: str,
                                   context_list: List[str]) -> str:
-        """
-        Format prompt with injected context.
-        
-        Args:
-            prompt: Original prompt
-            context_list: List of context strings to inject
-            
-        Returns:
-            Formatted prompt with context
-        """
+     
         if not context_list:
             return prompt
             
